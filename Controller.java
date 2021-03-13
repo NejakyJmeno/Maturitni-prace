@@ -79,6 +79,7 @@ public class Controller {
             d.setX(XMAX / 2 + SIZE);
             name = "i";
         }
+        Main.score += 5;
         return new Form(a, b, c, d, name);
     }
 
@@ -103,7 +104,7 @@ public class Controller {
                     if (node instanceof Rectangle)
                         rects.add(node);
                 }
-                Main.score += 50;
+                Main.score += 100;
                 Main.linesNo++;
 
                 for (Node node : rects) {
