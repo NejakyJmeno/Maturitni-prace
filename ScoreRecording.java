@@ -1,90 +1,189 @@
 package sample;
 
-import org.w3c.dom.Document;
-import org.w3c.dom.Element;
-import org.w3c.dom.NodeList;
-import org.xml.sax.SAXException;
-
-import javax.xml.parsers.DocumentBuilder;
-import javax.xml.parsers.DocumentBuilderFactory;
-import javax.xml.parsers.ParserConfigurationException;
-import javax.xml.transform.*;
-import javax.xml.transform.dom.DOMSource;
-import javax.xml.transform.stream.StreamResult;
 import java.io.*;
 import java.util.ArrayList;
 
 public class ScoreRecording {
 
-    static Document dom;
-    static Element e = null;
-    static DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
+    public static void recordScore() {
 
-    public static void recordScore (ArrayList scores) {
+        //dont sort only 1 score
+        if (Main.users != 0) {
+            try {
+                Sort();
+            }
+            catch (Exception e) {
+                System.out.println(e + "\n Skipping the problem");
+            }
+        }
 
-/*
         try {
             FileWriter myWriter = new FileWriter("scoredatabase.txt");
-            myWriter.write(scores.get(0).toString());
-            myWriter.write("\n");
-            myWriter.write(scores.get(1).toString());
+            for (int i = 0; i<Main.savedScore_numbers.length; i++) {
+                if (Main.savedScore_names[i] != null) {
+                    myWriter.write(String.valueOf(Main.savedScore_numbers[i]));
+                    myWriter.write("\n");
+                }
+            }
             myWriter.close();
-            System.out.println("Yeet");
+            System.out.println("Recording of your score was successful.");
         } catch (IOException e) {
-            System.out.println("FUCK!");
+            System.out.println("Couldn't record your score.");
             e.printStackTrace();
         }
 
- */
+        try {
+            FileWriter myWriter = new FileWriter("namedatabase.txt");
+            for (int i = 0; i<Main.savedScore_names.length; i++) {
+                if (Main.savedScore_names[i] != null) {
+                    myWriter.write(Main.savedScore_names[i]);
+                    myWriter.write("\n");
+                }
+            }
+            myWriter.close();
+            System.out.println("Recording of your name was successful.");
+        } catch (IOException e) {
+            System.out.println("Couldn't record your name.");
+            e.printStackTrace();
+        }
+    }
+
+    private static void Sort() {
+        System.out.println("Sorting started");
+        int helper = 0;
+        int bottom = 0;
+        for (int i=0; i<5; i++) { //only top 5 needed
+            for (int j=Main.users; j > 0+bottom; j--) {
+                System.out.println("one mini cycle started");
+                if (Main.savedScore_numbers[j] > Main.savedScore_numbers[j - 1]) {
+                    helper = Main.savedScore_numbers[j];
+                    Main.savedScore_numbers[j] = Main.savedScore_numbers[j - 1];
+                    Main.savedScore_numbers[j - 1] = helper;
+                    nameSwap(j);
+                }
+            }
+            bottom++;
+            if (i+1 > Main.users) {
+                break;
+            }
+        }
+    }
+
+    private static void nameSwap(int index){
+        String temp;
+
+        temp = Main.savedScore_names[index];
+        Main.savedScore_names[index] = Main.savedScore_names[index-1];
+        Main.savedScore_names[index-1] = temp;
+    }
+
+    public static void remember(){
+        BufferedReader reader;
 
         try {
-            DocumentBuilder db = dbf.newDocumentBuilder();
-            dom = db.newDocument();
-
-            Element rootEle = dom.createElement("User" + Main.users);
-
-            e = dom.createElement("name");
-            e.appendChild(dom.createTextNode(scores.get(0).toString()));
-            rootEle.appendChild(e);
-
-            e = dom.createElement("score");
-            e.appendChild(dom.createTextNode(scores.get(1).toString()));
-            rootEle.appendChild(e);
-
-            dom.appendChild(rootEle);
-
-            try {
-                Transformer tr = TransformerFactory.newInstance().newTransformer();
-                tr.setOutputProperty(OutputKeys.INDENT, "yes");
-                tr.setOutputProperty(OutputKeys.METHOD, "xml");
-                tr.setOutputProperty(OutputKeys.ENCODING, "UTF-8");
-
-                // send DOM to file
-                tr.transform(new DOMSource(dom), new StreamResult(new FileOutputStream("scoredatabase.xml")));
-                System.out.println("Yeet");
-
-            } catch (TransformerException te) {
-                System.out.println(te.getMessage());
-            } catch (IOException ioe) {
-                System.out.println(ioe.getMessage());
+            reader = new BufferedReader(new FileReader("namedatabase.txt"));
+            String line = reader.readLine();
+            int index = 0;
+            while (line != null) {
+                Main.savedScore_names[index] = line;
+                index++;
+                if (index == 256) {
+                    break;
+                }
+                line = reader.readLine();
             }
-        } catch (ParserConfigurationException pce) {
-            System.out.println("UsersXML: Error trying to instantiate DocumentBuilder " + pce);
+            reader.close();
+        } catch (IOException e) {
+            e.printStackTrace();
         }
 
-        Main.savedScore.clear();
-        Main.users++;
-    }
-
-    private String getTextValue(String def, Element doc, String tag) {
-
-        String value = def;
-        NodeList nl;
-        nl = doc.getElementsByTagName(tag);
-        if (nl.getLength() > 0 && nl.item(0).hasChildNodes()) {
-            value = nl.item(0).getFirstChild().getNodeValue();
+        try {
+            reader = new BufferedReader(new FileReader("scoredatabase.txt"));
+            String line = reader.readLine();
+            int index = 0;
+            while (line != null) {
+                Main.savedScore_numbers[index] = Integer.parseInt(line);
+                index++;
+                if (index == 256) {
+                    break;
+                }
+                line = reader.readLine();
+            }
+            reader.close();
+            Main.users = index;
+        } catch (IOException e) {
+            e.printStackTrace();
         }
-        return value;
     }
 
+    public static void read(){
+        BufferedReader reader;
+
+        try {
+            reader = new BufferedReader(new FileReader("namedatabase.txt"));
+
+            String line = reader.readLine();
+            if (line != null) {
+                Main.name1 = line;
+            }
+
+            line = reader.readLine();
+            if (line != null) {
+                Main.name2 = line;
+            }
+
+            line = reader.readLine();
+            if (line != null) {
+                Main.name3 = line;
+            }
+
+            line = reader.readLine();
+            if (line != null) {
+                Main.name4 = line;
+            }
+
+            line = reader.readLine();
+            if (line != null) {
+                Main.name5 = line;
+            }
+
+            reader.close();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+
+        try {
+            reader = new BufferedReader(new FileReader("scoredatabase.txt"));
+
+            String line = reader.readLine();
+            if (line != null) {
+                Main.score1 = line;
+            }
+
+            line = reader.readLine();
+            if (line != null) {
+                Main.score2 = line;
+            }
+
+            line = reader.readLine();
+            if (line != null) {
+                Main.score3 = line;
+            }
+
+            line = reader.readLine();
+            if (line != null) {
+                Main.score4 = line;
+            }
+
+            line = reader.readLine();
+            if (line != null) {
+                Main.score5 = line;
+            }
+
+            reader.close();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
 }

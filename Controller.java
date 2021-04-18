@@ -7,8 +7,6 @@ import javafx.scene.shape.*;
 import java.util.ArrayList;
 
 public class Controller {
-    // Getting the numbers and the MESH from Tetris
-    public static final int MOVE = Main.MOVE;
     public static final int SIZE = Main.SIZE;
     public static int XMAX = Main.XMAX;
     public static int YMAX = Main.YMAX;
@@ -16,14 +14,14 @@ public class Controller {
 
 
     public static Form makeRect() {
-        int block = (int) (Math.random() * 100);
+        int shape = (int) (Math.random() * 100);
         String name;
         Rectangle
                 a = new Rectangle(SIZE-1, SIZE-1),
                 b = new Rectangle(SIZE-1, SIZE-1),
                 c = new Rectangle(SIZE-1, SIZE-1),
                 d = new Rectangle(SIZE-1, SIZE-1);
-        if (block < 15) {
+        if (shape < 15) {
             a.setX(XMAX / 2 - SIZE);
             b.setX(XMAX / 2 - SIZE);
             b.setY(SIZE);
@@ -32,7 +30,7 @@ public class Controller {
             d.setX(XMAX / 2 + SIZE);
             d.setY(SIZE);
             name = "j";
-        } else if (block < 30) {
+        } else if (shape < 30) {
             a.setX(XMAX / 2 + SIZE);
             b.setX(XMAX / 2 - SIZE);
             b.setY(SIZE);
@@ -41,7 +39,7 @@ public class Controller {
             d.setX(XMAX / 2 + SIZE);
             d.setY(SIZE);
             name = "l";
-        } else if (block < 45) {
+        } else if (shape < 45) {
             a.setX(XMAX / 2 - SIZE);
             b.setX(XMAX / 2);
             c.setX(XMAX / 2 - SIZE);
@@ -49,7 +47,7 @@ public class Controller {
             d.setX(XMAX / 2);
             d.setY(SIZE);
             name = "o";
-        } else if (block < 60) {
+        } else if (shape < 60) {
             a.setX(XMAX / 2 + SIZE);
             b.setX(XMAX / 2);
             c.setX(XMAX / 2);
@@ -57,14 +55,14 @@ public class Controller {
             d.setX(XMAX / 2 - SIZE);
             d.setY(SIZE);
             name = "s";
-        } else if (block < 75) {
+        } else if (shape < 75) {
             a.setX(XMAX / 2 - SIZE);
             b.setX(XMAX / 2);
             c.setX(XMAX / 2);
             c.setY(SIZE);
             d.setX(XMAX / 2 + SIZE);
             name = "t";
-        } else if (block < 90) {
+        } else if (shape < 90) {
             a.setX(XMAX / 2 + SIZE);
             b.setX(XMAX / 2);
             c.setX(XMAX / 2 + SIZE);
@@ -79,7 +77,6 @@ public class Controller {
             d.setX(XMAX / 2 + SIZE);
             name = "i";
         }
-        Main.score += 5;
         return new Form(a, b, c, d, name);
     }
 
@@ -95,7 +92,6 @@ public class Controller {
             }
             if (full == MESH.length)
                 lines.add(i);
-            //lines.add(i + lines.size());
             full = 0;
         }
         if (lines.size() > 0)
@@ -105,7 +101,6 @@ public class Controller {
                         rects.add(node);
                 }
                 Main.score += 100;
-                Main.linesNo++;
 
                 for (Node node : rects) {
                     Rectangle a = (Rectangle) node;
