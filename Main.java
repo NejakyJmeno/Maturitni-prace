@@ -30,7 +30,6 @@ import java.util.TimerTask;
 
 public class Main extends Application {
 
-    public static final int MOVE = 25; //objekt se vzdy musi pohybovat o presne svoji velikost
     public static final int SIZE = 25; //velikost kazdeho ctverecku objektu
     public static int XMAX = SIZE * 12; //sirka hraciho pole
     public static int YMAX = SIZE * 30; //vyska hraciho pole
@@ -51,11 +50,11 @@ public class Main extends Application {
     private static Color textColor = Color.WHITE;
 
     //hotkeys
-    public static String UPcase = "W"; //UP
-    public static String RIGHTcase = "D"; //RIGHT
-    public static String LEFTcase = "A"; //LEFT
-    public static String DOWNcase = "S"; //DOWN
-    public static String pressedButton;
+    private static String UPcase = "W"; //UP
+    private static String RIGHTcase = "D"; //RIGHT
+    private static String LEFTcase = "A"; //LEFT
+    private static String DOWNcase = "S"; //DOWN
+    private static String pressedButton;
 
     //score stuff
     public static int[] savedScore_numbers = new int[256];
