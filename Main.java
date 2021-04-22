@@ -23,6 +23,7 @@ import javafx.scene.text.TextAlignment;
 import javafx.stage.Stage;
 
 import java.nio.file.Paths;
+import java.sql.SQLOutput;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Timer;
@@ -260,32 +261,39 @@ public class Main extends Application {
 
     }
 
-    private void changingHotkeys(Stage stage, String hotkey) {
-        switch (pressedButton) {
-            case "up":
-                if (!RIGHTcase.equals(hotkey.toUpperCase()) && !LEFTcase.equals(hotkey.toUpperCase()) && !DOWNcase.equals(hotkey.toUpperCase())) {
-                    UPcase = hotkey.toUpperCase();
+    private void changingHotkeys(Stage stage) {
+        scene.setOnKeyPressed(new EventHandler<KeyEvent>() {
+            @Override
+            public void handle(KeyEvent event) {
+                String hotkey = event.getCode().toString();
+                System.out.println(hotkey);
+                switch (pressedButton) {
+                    case "up":
+                        if (!RIGHTcase.equals(hotkey.toUpperCase()) && !LEFTcase.equals(hotkey.toUpperCase()) && !DOWNcase.equals(hotkey.toUpperCase())) {
+                            UPcase = hotkey.toUpperCase();
+                        }
+                        break;
+                    case "right":
+                        if (!UPcase.equals(hotkey.toUpperCase()) && !LEFTcase.equals(hotkey.toUpperCase()) && !DOWNcase.equals(hotkey.toUpperCase())) {
+                            RIGHTcase = hotkey.toUpperCase();
+                        }
+                        break;
+                    case "left":
+                        if (!RIGHTcase.equals(hotkey.toUpperCase()) && !UPcase.equals(hotkey.toUpperCase()) && !DOWNcase.equals(hotkey.toUpperCase())) {
+                            LEFTcase = hotkey.toUpperCase();
+                        }
+                        break;
+                    case "down":
+                        if (!RIGHTcase.equals(hotkey.toUpperCase()) && !LEFTcase.equals(hotkey.toUpperCase()) && !UPcase.equals(hotkey.toUpperCase())) {
+                            DOWNcase = hotkey.toUpperCase();
+                        }
+                        break;
                 }
-                break;
-            case "right":
-                if (!UPcase.equals(hotkey.toUpperCase()) && !LEFTcase.equals(hotkey.toUpperCase()) && !DOWNcase.equals(hotkey.toUpperCase())) {
-                    RIGHTcase = hotkey.toUpperCase();
-                }
-                break;
-            case "left":
-                if (!RIGHTcase.equals(hotkey.toUpperCase()) && !UPcase.equals(hotkey.toUpperCase()) && !DOWNcase.equals(hotkey.toUpperCase())) {
-                    LEFTcase = hotkey.toUpperCase();
-                }
-                break;
-            case "down":
-                if (!RIGHTcase.equals(hotkey.toUpperCase()) && !LEFTcase.equals(hotkey.toUpperCase()) && !UPcase.equals(hotkey.toUpperCase())) {
-                    DOWNcase = hotkey.toUpperCase();
-                }
-                break;
-        }
-        pressedButton = null;
-        group.getChildren().clear();
-        settings(stage);
+                pressedButton = null;
+                group.getChildren().clear();
+                settings(stage);
+            }
+        });
     }
 
     private void settings(Stage stage) {
@@ -294,7 +302,7 @@ public class Main extends Application {
         Button buttonLEFT = new Button();
         Button buttonDOWN = new Button();
         Button buttonBack = new Button("↩");
-        TextField controlChange = new TextField ();
+        Rectangle controlChange = new Rectangle ();
 
         Text selectMusic = new Text("Select music: ");
         ObservableList<String> music_options = FXCollections.observableArrayList("Classic", "Techno", "Halloween");
@@ -327,9 +335,9 @@ public class Main extends Application {
 
         controlChange.setTranslateX(XMAX/2);
         controlChange.setTranslateY(YMAX/2 + 100);
-        controlChange.setMinHeight(55);
-        controlChange.setMaxWidth(60);
-        controlChange.setOnKeyTyped(event -> changingHotkeys(stage, controlChange.getText()));
+        controlChange.setHeight(55);
+        controlChange.setWidth(60);
+        controlChange.setFill(textColor);
 
         String upText = arrowCheck(UPcase);
         String rightText = arrowCheck(RIGHTcase);
@@ -399,6 +407,7 @@ public class Main extends Application {
                 controlChange.setTranslateX(XMAX/2);
                 controlChange.setTranslateY(YMAX/2 - 32);
                 group.getChildren().add(controlChange);
+                changingHotkeys(stage);
             }
         });
 
@@ -408,6 +417,7 @@ public class Main extends Application {
                 controlChange.setTranslateX(XMAX/2 + 65);
                 controlChange.setTranslateY(YMAX/2 + 30);
                 group.getChildren().add(controlChange);
+                changingHotkeys(stage);
             }
         });
 
@@ -417,6 +427,7 @@ public class Main extends Application {
                 controlChange.setTranslateX(XMAX/2 - 65);
                 controlChange.setTranslateY(YMAX/2 + 30);
                 group.getChildren().add(controlChange);
+                changingHotkeys(stage);
             }
         });
 
@@ -426,6 +437,7 @@ public class Main extends Application {
                 controlChange.setTranslateX(XMAX/2);
                 controlChange.setTranslateY(YMAX/2 + 30);
                 group.getChildren().add(controlChange);
+                changingHotkeys(stage);
             }
         });
 
@@ -575,6 +587,7 @@ public class Main extends Application {
             @Override
             public void handle(KeyEvent event) {
                 String input = event.getCode().toString();
+                System.out.println(input); //what key is pressed
 
                 if (input.equals(UPcase)) {
                     Moving.MoveTurn(form);
